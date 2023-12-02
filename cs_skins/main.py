@@ -5,43 +5,39 @@ import json
 ua = UserAgent()
 
 
-# print(ua.random)
+class Collection:
 
+    def __init__(self, weapon_type, data_list=[]):
+        self.weapon_type = weapon_type
+        self.data_list = data_list
 
-def collect_data(weapon_type=4):
-    offset = 0
-    limit = 60
-    result = []
-    count = 0
+    def collect_data(self):
+        offset = 0
+        limit = 60
+        count = 0
 
-    while True:
         for item in range(offset, offset + limit, 60):
 
-            url = (f'https://cs.money/1.0/market/sell-orders?limit=60&maxPrice=10000&minPrice=3000&offset={offset}'
-                   f'&type={weapon_type}')
+            url = (f'https://cs.money/1.0/market/sell-orders?limit=60&maxPrice=10000&minPrice=3000&offset={item}'
+                   f'&type={self.weapon_type}')
             response = requests.get(
                 url=url,
                 headers={'user-agent': f'{ua.random}'}
             )
 
             offset += limit
-
             data = response.json()
-
-            if data.get('error') == 2:
-                return 'Data were collected'
-
-            items = data.get('items')
+            items = data.get('items', [])
 
             for i in items:
 
-                if i.get('pricing').get('discount') > 0.25:
-                    item_full_name = i.get('asset').get('names').get('full')
-                    item_3d = i.get('links').get('3d')
-                    item_discount = i.get('pricing').get('discount') * 100
-                    item_price = i.get('pricing').get('computed')
+                if i.get('pricing', {}).get('discount') > 0.25:
+                    item_full_name = i.get('asset', {}).get('names', {}).get('full')
+                    item_3d = i.get('links', {}).get('3d')
+                    item_discount = i.get('pricing', {}).get('discount', 0) * 100
+                    item_price = i.get('pricing', {}).get('computed')
 
-                    result.append(
+                    self.data_list.append(
                         {
                             'full_name': item_full_name,
                             'item_3d': item_3d,
@@ -54,14 +50,16 @@ def collect_data(weapon_type=4):
         print(f'Page #{count}')
         print(url)
 
+    def save(self):
         with open('result.json', 'w') as file:
-            json.dump(result, file, indent=4, ensure_ascii=False)
+            json.dump(self.data_list, file, indent=4, ensure_ascii=False)
 
-        print(len(result))
+        print(len(self.data_list))
 
 
 def main():
-    print(collect_data(weapon_type=4))
+    Collection(weapon_type=2).collect_data()
+    Collection(weapon_type=2).save()
 
 
 if __name__ == '__main__':
