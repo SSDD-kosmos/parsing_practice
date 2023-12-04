@@ -7,19 +7,18 @@ ua = UserAgent()
 
 class Collection:
 
-    def __init__(self, weapon_type, data_list=[]):
+    def __init__(self, weapon_type, data_list=None):
         self.weapon_type = weapon_type
-        self.data_list = data_list
+        self.data_list = data_list or []
 
-    def collect_data(self):
+    def collect_data(self, minPrice, maxPrice, discount):
         offset = 0
         limit = 60
         count = 0
 
-        for item in range(offset, offset + limit, 60):
-
-            url = (f'https://cs.money/1.0/market/sell-orders?limit=60&maxPrice=10000&minPrice=3000&offset={item}'
-                   f'&type={self.weapon_type}')
+        for item in range(offset, 120 + limit, 60):
+            url = (f'https://cs.money/1.0/market/sell-orders?limit=60&maxPrice={maxPrice}'
+                   f'&minPrice={minPrice}&offset={item}&type={self.weapon_type}')
             response = requests.get(
                 url=url,
                 headers={'user-agent': f'{ua.random}'}
@@ -31,7 +30,7 @@ class Collection:
 
             for i in items:
 
-                if i.get('pricing', {}).get('discount') > 0.25:
+                if i.get('pricing', {}).get('discount') > discount:
                     item_full_name = i.get('asset', {}).get('names', {}).get('full')
                     item_3d = i.get('links', {}).get('3d')
                     item_discount = i.get('pricing', {}).get('discount', 0) * 100
@@ -46,20 +45,20 @@ class Collection:
                         }
                     )
 
-        count += 1
-        print(f'Page #{count}')
-        print(url)
+            count += 1
+            print(f'Page #{count}')
+            print(url)
+            print(len(self.data_list))
 
     def save(self):
         with open('result.json', 'w') as file:
             json.dump(self.data_list, file, indent=4, ensure_ascii=False)
 
-        print(len(self.data_list))
-
 
 def main():
-    Collection(weapon_type=2).collect_data()
-    Collection(weapon_type=2).save()
+    col = Collection(weapon_type=2)
+    col.collect_data(3000, 10000, 0.25)
+    col.save()
 
 
 if __name__ == '__main__':
