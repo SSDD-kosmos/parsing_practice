@@ -11,7 +11,7 @@ class Collection:
         self.weapon_type = weapon_type
         self.data_list = data_list or []
 
-    def collect_data(self, minPrice, maxPrice, discount):
+    def collect_data(self, minPrice=5000, maxPrice=10000, discount=25):
         offset = 0
         limit = 60
         count = 0
@@ -30,7 +30,7 @@ class Collection:
 
             for i in items:
 
-                if i.get('pricing', {}).get('discount') > discount:
+                if i.get('pricing', {}).get('discount') > int(discount)/100:
                     item_full_name = i.get('asset', {}).get('names', {}).get('full')
                     item_3d = i.get('links', {}).get('3d')
                     item_discount = i.get('pricing', {}).get('discount', 0) * 100
@@ -57,7 +57,7 @@ class Collection:
 
 def main():
     col = Collection(weapon_type=2)
-    col.collect_data(3000, 10000, 0.25)
+    col.collect_data()
     col.save()
 
 
