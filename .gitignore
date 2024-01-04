@@ -1,4 +1,5 @@
 bitcoin_cost/btc_token.py
+cs_skins/__pycache__
 cs_skins/data/.env
 cs_skins/result.json
 magnit/magnit_token.py
