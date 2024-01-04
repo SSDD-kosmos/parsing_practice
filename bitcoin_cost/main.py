@@ -1,7 +1,7 @@
 import requests
 from datetime import datetime
 import telebot
-from token_bot import token
+from btc_token import token
 
 
 def get_data():

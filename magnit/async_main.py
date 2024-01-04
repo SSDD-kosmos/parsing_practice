@@ -1,7 +1,5 @@
 import datetime
-# import json
 import requests
-# import csv
 from fake_useragent import UserAgent
 import asyncio
 import aiohttp

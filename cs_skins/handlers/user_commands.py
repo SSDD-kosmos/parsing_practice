@@ -3,7 +3,8 @@ from aiogram.types import Message
 from aiogram.filters import CommandStart
 from aiogram.utils.markdown import hbold
 
-from cs_skins.keyboards import reply, builders
+from cs_skins.keyboards import reply
+from cs_skins.filters.is_admin import IsAdmin
 
 router = Router()
 
