@@ -6,7 +6,7 @@ from aiogram.types import Message
 from aiogram.utils.markdown import hbold, hlink
 
 from cs_skins.data.main import Collection
-from cs_skins.handlers import settings
+from . import settings
 
 router = Router()
 

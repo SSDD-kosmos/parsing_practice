@@ -1,4 +1,8 @@
-cs_skins/result.json
 ozon
 .idea
 scrap_tutorial
+.DS_Store
+magicbot
+lamoda
+__pycache__
+venv
